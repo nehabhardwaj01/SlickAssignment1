@@ -1,10 +1,11 @@
 package components
 
+import com.google.inject.Inject
 import models.Dependent
 import tables.DependentTable
 import scala.concurrent.ExecutionContext.Implicits.global
 
-trait DependentComponent extends DependentTable{
+class DependentComponent @Inject()(val dbProvider : MyDBProvider) extends DependentTable{
   this:DbProvider =>
   import driver.api._
 
@@ -39,8 +40,13 @@ trait DependentComponent extends DependentTable{
     db.run(dependentTableQuery.insertOrUpdate(dep))
   }
 
-}
+  def drop = {
+    db.run(dependentTableQuery.schema.drop)
+    dependentTableQuery.schema.drop.statements.foreach(println)
+  }
 
-object DependentComponent extends DependentComponent with MySqlDBProvider{
+  def deleteAll = {
+    db.run(dependentTableQuery.map(x=> x).delete)
+  }
 
 }

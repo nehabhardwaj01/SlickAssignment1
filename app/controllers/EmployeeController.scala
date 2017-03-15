@@ -6,8 +6,12 @@ import services.main
 class EmployeeController extends Controller{
 
   def getAll = Action{
-    implicit request =>
-      println(main.listOfEmployees)
-    Ok(views.html.index(main.listOfEmployees.toString()))
+    //implicit request =>
+      println(main.listOfEmployees.head.name)
+    Ok(views.html.index(getAllEmployee(main.listOfEmployees)))
+  }
+
+  def getAllEmployee(list : List[models.Employee]) : String = {
+    list.toString()
   }
 }

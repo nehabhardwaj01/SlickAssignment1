@@ -14,7 +14,7 @@ trait ProjectTable extends EmployeeTable{
     val members = column[Int]("team_members")
     val lead = column[String]("lead")
 
-    def employeeProjectFK = foreignKey("employee_project_fk",empId,queryObj)(_.empId)
+    def employeeProjectFK = foreignKey("employee_project_fk",empId,employeeTableQuery)(_.empId)
 
     def * = (pId,empId,name,members,lead) <>(Project.tupled,Project.unapply)
   }

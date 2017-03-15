@@ -15,7 +15,7 @@ trait DependentTable extends EmployeeTable{
     val relation = column[String]("relation")
     val age = column[Option[Int]]("age")
 
-    def employeeDepdndentFK = foreignKey("employee_dependent_fk",dependentOn,queryObj)(_.empId)
+    def employeeDepdndentFK = foreignKey("employee_dependent_fk",dependentOn,employeeTableQuery)(_.empId)
 
     def * = (depId,name,dependentOn,relation,age) <>(Dependent.tupled,Dependent.unapply)
   }

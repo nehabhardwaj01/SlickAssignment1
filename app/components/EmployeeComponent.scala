@@ -1,39 +1,45 @@
 package components
 
+import com.google.inject.Inject
 import models.Employee
 import tables.EmployeeTable
 
-trait EmployeeComponent extends EmployeeTable{
+class EmployeeComponent@Inject()(val dbProvider : MyDBProvider)  extends EmployeeTable{
 
   this:DbProvider =>
   import driver.api._
 
-  def create = db.run(queryObj.schema.create)
+  def create = db.run(employeeTableQuery.schema.create)
 
   def insert(emp :Employee) = db.run{
-    queryObj += emp
+    employeeTableQuery += emp
   }
 
   def delete(exp : Double) ={
-    val query= queryObj.filter(x => x.experience < 4.00)
+    val query= employeeTableQuery.filter(x => x.experience < 4.00)
     val action = query.delete
     db.run(action)
   }
 
   def update(id:Int,name : String) ={
-    val query = queryObj.filter(_.empId === id).map(_.name).update(name)
+    val query = employeeTableQuery.filter(_.empId === id).map(_.name).update(name)
     db.run(query)
   }
 
   def getall() ={
-    db.run(queryObj.result)
+    db.run(employeeTableQuery.result)
   }
 
   def insertOrUpdate(emp : Employee) = {
-    db.run(queryObj.insertOrUpdate(emp))
+    db.run(employeeTableQuery.insertOrUpdate(emp))
   }
-}
 
-object EmployeeComponent extends EmployeeComponent with MySqlDBProvider{
+  def drop = {
+    db.run(employeeTableQuery.schema.drop)
+    employeeTableQuery.schema.drop.statements.foreach(println)
+  }
 
+  def deleteAll = {
+    db.run(employeeTableQuery.map(x => x).delete)
+  }
 }

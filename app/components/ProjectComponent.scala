@@ -1,10 +1,11 @@
 package components
 
+import com.google.inject.Inject
 import models.Project
 import tables.ProjectTable
 
 
-trait ProjectComponent extends ProjectTable {
+class ProjectComponent@Inject()(val dbProvider : MyDBProvider)  extends ProjectTable {
   this:DbProvider =>
   import driver.api._
 
@@ -32,8 +33,13 @@ trait ProjectComponent extends ProjectTable {
   def insertOrUpdate(prj : Project) = {
     db.run(projectTableQuery.insertOrUpdate(prj))
   }
-}
 
-object ProjectComponent extends ProjectComponent with MySqlDBProvider{
+  def drop = {
+    db.run(projectTableQuery.schema.truncate)
+    projectTableQuery.schema.truncate.statements.foreach(println)
+  }
 
+  def deleteAll = {
+    db.run(projectTableQuery.map(x => x).delete)
+  }
 }

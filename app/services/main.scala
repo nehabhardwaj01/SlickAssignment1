@@ -1,17 +1,18 @@
 package services
 
+import com.google.inject.Inject
 import components.{ProjectComponent, EmployeeComponent, DependentComponent}
 import models.{Project, Employee, Dependent}
 import scala.concurrent.ExecutionContext.Implicits.global
 
 
-object main extends App {
+class main @Inject()(dependent: DependentComponent,employee : EmployeeComponent,project : ProjectComponent) {
   /*
   initialize all the databases.
    */
-  DependentComponent.create
-  EmployeeComponent.create
-  ProjectComponent.create
+  dependent.create
+  employee.create
+  project.create
   Thread.sleep(2000)
 
   /*
@@ -27,7 +28,7 @@ object main extends App {
 
 
   for(l <- listOfEmployees){
-    val result = EmployeeComponent.insert(l)
+    val result = employee.insert(l)
     val res = result.map(res => s"$res row inserted").recover {
       case ex : Throwable => ex.getMessage
     }
@@ -44,7 +45,7 @@ object main extends App {
   )
 
   for(l <- listOfProjects){
-    val result = ProjectComponent.insert(l)
+    val result = project.insert(l)
     val res = result.map(res => s"$res row inserted").recover {
       case ex : Throwable => ex.getMessage
     }
@@ -60,7 +61,7 @@ object main extends App {
   )
 
   for(l  <- listOfDependents){
-    val result = DependentComponent.insert(l)
+    val result = dependent.insert(l)
     val res = result.map(res => s"$res row inserted").recover {
       case ex : Throwable => ex.getMessage
     }
@@ -70,18 +71,18 @@ object main extends App {
   /*
   Print all the values in the database
    */
-  val getallEmployee = EmployeeComponent.getall().map(res => s"$res \n").recover{
+  val getallEmployee = employee.getall().map(res => s"$res \n").recover{
     case ex : Throwable => ex.getMessage
   }
   getallEmployee.map(println(_))
 
-  val getallProjects = ProjectComponent.getall().map(res => s"$res \n").recover{
+  val getallProjects = project.getall().map(res => s"$res \n").recover{
     case ex : Throwable => ex.getMessage
   }
   getallProjects.map(println(_))
 
 
-  val getallDependent = DependentComponent.getall().map(res => s"$res \n").recover{
+  val getallDependent = dependent.getall().map(res => s"$res \n").recover{
     case ex : Throwable => ex.getMessage
   }
   getallDependent.map(println(_))

@@ -15,5 +15,5 @@ trait EmployeeTable{
     def * = (empId,name,experience) <>(Employee.tupled,Employee.unapply)
   }
 
-  val queryObj = TableQuery[EmployeeTable]
+  val employeeTableQuery = TableQuery[EmployeeTable]
 }

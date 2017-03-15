@@ -1,10 +1,11 @@
 package components
 
 
+import com.google.inject.{Singleton, Inject}
 import slick.jdbc.{PostgresProfile, JdbcProfile, MySQLProfile}
 
+@Singleton
 trait DbProvider {
-
   val driver:JdbcProfile
 
   import driver.api._
@@ -12,23 +13,23 @@ trait DbProvider {
   val db:Database
 
 }
-
-trait PostGresDBProvider extends DbProvider{
-
-  val driver = PostgresProfile
-
-  import driver.api._
-
-  val db = Database.forConfig("myPostgresDB")
-
-}
-
-trait MySqlDBProvider extends DbProvider{
-
-  val driver = MySQLProfile
-
-  import driver.api._
-
-  val db = Database.forConfig("mySqlDB")
-
-}
+//
+//trait PostGresDBProvider extends DbProvider{
+//
+//  val driver = PostgresProfile
+//
+//  import driver.api._
+//
+//  val db = Database.forConfig("myPostgresDB")
+//
+//}
+//
+//trait MySqlDBProvider extends DbProvider{
+//
+//  val driver = MySQLProfile
+//
+//  import driver.api._
+//
+//  val db = Database.forConfig("mySqlDB")
+//
+//}
